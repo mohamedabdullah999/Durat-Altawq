@@ -3,14 +3,16 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Models\Message;
 use App\Models\Partner;
 use App\Models\Product;
 use App\Models\Service;
-use App\Models\Message;
+use App\Services\SettingManager;
 
 class DashboardController extends Controller
 {
+    public function __construct(protected SettingManager $settingManager) {}
+
     public function index()
     {
         $stats = [
@@ -20,6 +22,8 @@ class DashboardController extends Controller
             'messages' => Message::count(),
         ];
 
-        return view('admin.dashboard', compact('stats'));
+        $settings = $this->settingManager->getAllSettings();
+
+        return view('admin.dashboard', compact('stats', 'settings'));
     }
 }

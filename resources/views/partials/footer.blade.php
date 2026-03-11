@@ -17,9 +17,9 @@
             <div>
                 <h3 class="text-xl font-bold mb-4 text-green-400">تابعنا</h3>
                 <div class="flex justify-center md:justify-start gap-4">
-                    <a href="#" class="w-10 h-10 rounded-full bg-white bg-opacity-10 flex items-center justify-center hover:bg-green-600 transition">𝕏</a>
-                    <a href="#" class="w-10 h-10 rounded-full bg-white bg-opacity-10 flex items-center justify-center hover:bg-green-600 transition">in</a>
-                    <a href="#" class="w-10 h-10 rounded-full bg-white bg-opacity-10 flex items-center justify-center hover:bg-green-600 transition">f</a>
+                    <a href="{{ $settings['social_twitter'] ?? "#" }} " target="_blank" class="w-10 h-10 rounded-full bg-white bg-opacity-10 flex items-center justify-center hover:bg-green-600 transition">𝕏</a>
+                    <a href="{{ $settings['social_linkedin'] ?? "#" }}" target="_blank" class="w-10 h-10 rounded-full bg-white bg-opacity-10 flex items-center justify-center hover:bg-green-600 transition">in</a>
+                    <a href="{{ $settings['social_facebook'] ?? "#" }}" target="_blank" class="w-10 h-10 rounded-full bg-white bg-opacity-10 flex items-center justify-center hover:bg-green-600 transition">f</a>
                 </div>
             </div>
         </div>

@@ -2,9 +2,10 @@
     <div class="container mx-auto px-4 py-3 flex items-center justify-between">
 
         <div class="flex items-center gap-3">
-            <div class="w-14 h-14 rounded-full overflow-hidden border-2 border-green-500 flex items-center justify-center p-1 bg-white shadow-sm">
-                <img src="https://i.ibb.co/wZYP2DzW/Chat-GPT-Image-Feb-28-2026-01-03-03-PM.png" alt="" class="w-full h-full object-contain rounded-full">
+            <div class="w-14 h-14 rounded-full overflow-hidden border-2 border-green-500 flex items-center justify-center bg-white shadow-sm shrink-0">
+                <img src="{{asset($settings['site_logo'] ?? 'https://i.ibb.co/wZYP2DzW/Chat-GPT-Image-Feb-28-2026-01-03-03-PM.png')}}" alt="Logo" class="w-full h-full object-cover">
             </div>
+
             <div class="flex flex-col">
                 <span class="font-bold text-xl text-green-800">درة الطوق</span>
                 <span class="text-xs text-gray-500 font-semibold tracking-wide">Durat Al-Tawq</span>

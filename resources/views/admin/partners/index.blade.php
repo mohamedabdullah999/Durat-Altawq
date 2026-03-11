@@ -37,7 +37,7 @@
                         <tr class="border-b border-gray-50 hover:bg-gray-50/50 transition">
                             <td class="px-6 py-4">
                                 @if($partner->logo)
-                                    <img src="{{ $partner->logo }}" alt="" class="w-16 h-16 object-contain bg-gray-50 rounded-lg border border-gray-200 shadow-sm p-1">
+                                    <img src="{{ asset($partner->logo) }}" alt="" class="w-16 h-16 object-contain bg-gray-50 rounded-lg border border-gray-200 shadow-sm p-1">
                                 @else
                                     <div class="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center text-gray-400 text-xs border border-gray-200">لا يوجد</div>
                                 @endif

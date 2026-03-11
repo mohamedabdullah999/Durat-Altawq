@@ -13,8 +13,8 @@
     <div class="bg-white p-6 sm:p-10 rounded-2xl shadow-xl w-full max-w-md border border-gray-100">
 
         <div class="text-center mb-8">
-            <div class="w-20 h-20 mx-auto rounded-full overflow-hidden border-2 border-green-500 mb-4 p-1 shadow-sm">
-                <img src="{{ asset('images/WhatsApp Image 2026-02-28 at 13.21.47.jpeg') }}" alt="درة الطوق" class="w-full h-full object-contain rounded-full">
+            <div class="w-20 h-20 mx-auto rounded-full overflow-hidden border-2 border-green-500 mb-4 bg-white shadow-sm">
+                <img src="{{ asset($settings['site_logo'] ?? 'https://i.ibb.co/wZYP2DzW/Chat-GPT-Image-Feb-28-2026-01-03-03-PM.png') }}" alt="درة الطوق" class="w-full h-full object-cover">
             </div>
             <h1 class="text-2xl font-bold text-green-900">تسجيل الدخول للإدارة</h1>
             <p class="text-gray-500 mt-2 text-sm">مؤسسة درة الطوق</p>

@@ -3,19 +3,20 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Services\MessageManager;
 use App\Http\Requests\StoreContactMessageRequest;
+use App\Services\MessageManager;
+use App\Services\SettingManager;
 
 class ContactMessageController extends Controller
 {
-    public function __construct(protected MessageManager $messageManager)
-    {}
+    public function __construct(protected MessageManager $messageManager, protected SettingManager $settingManager) {}
 
     public function index()
     {
         $messages = $this->messageManager->getAllMessagesForAdmin();
-        return view('admin.contact_messages.index', compact('messages'));
+        $settings = $this->settingManager->getAllSettings();
+
+        return view('admin.contact_messages.index', compact('messages', 'settings'));
     }
 
     public function store(StoreContactMessageRequest $request)
@@ -28,16 +29,18 @@ class ContactMessageController extends Controller
     public function show($id)
     {
         $message = $this->messageManager->getMessageDetails($id);
-        if (!$message) {
+        $settings = $this->settingManager->getAllSettings();
+        if (! $message) {
             return redirect()->route('admin.contact_messages.index')->with('error', 'الرسالة غير موجودة.');
         }
 
-        return view('admin.contact_messages.show', compact('message'));
+        return view('admin.contact_messages.show', compact('message', 'settings'));
     }
 
     public function destroy($id)
     {
         $this->messageManager->deleteMessage($id);
+
         return redirect()->route('admin.contact_messages.index')->with('success', 'تم حذف الرسالة بنجاح.');
     }
 }

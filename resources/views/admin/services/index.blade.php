@@ -35,7 +35,7 @@
                             </td>
 <td class="p-4 text-center">
     @if($service->icon)
-        <img src="{{ $service->icon }}" alt="{{ $service->title }}"
+        <img src="{{ asset($service->icon) }}" alt="{{ $service->title }}"
              class="w-12 h-12 object-contain rounded-lg bg-gray-50 border border-gray-200 shadow-sm p-1 inline-block">
     @else
         <div class="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center text-gray-400 text-xl border border-gray-200 inline-flex">
