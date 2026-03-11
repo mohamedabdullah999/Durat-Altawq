@@ -3,7 +3,6 @@
 @section('content')
 
     <style>
-        /* شيلنا الأنيميشن القديم وسبنا بس إخفاء شريط التمرير */
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
@@ -262,22 +261,17 @@
 
             carousels.forEach(carousel => {
                 setInterval(() => {
-                    // إيقاف التمرير لو الماوس على العنصر عشان العميل يقدر يقرأ التفاصيل براحته
                     if (carousel.matches(':hover')) return;
 
-                    // حساب أقصى مسافة للتمرير
                     const maxScroll = carousel.scrollWidth - carousel.clientWidth;
                     const currentScroll = Math.abs(carousel.scrollLeft);
 
-                    // لو وصلنا للآخر (بنسيب 10 بيكسل كنسبة خطأ في تقريب المتصفحات)
                     if (currentScroll >= maxScroll - 10) {
-                        // ارجع للأول خالص بنعومة
                         carousel.scrollTo({ left: 0, behavior: 'smooth' });
                     } else {
-                        // حرك بمقدار عرض الشاشة الظاهر عشان يجيب المجموعة اللي بعدها
                         carousel.scrollBy({ left: -carousel.clientWidth, behavior: 'smooth' });
                     }
-                }, 4000); // 4000 = 4 ثواني وقوف
+                }, 4000);
             });
         });
     </script>
