@@ -17,9 +17,8 @@
 
     <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 md:p-8 max-w-4xl mx-auto">
 
-        <form action="{{ route('admin.services.update', $service) }}" method="POST">
+        <form action="{{ route('admin.services.update', $service) }}" method="POST" enctype="multipart/form-data">
             @csrf
-
             @method('PUT')
 
             <div class="space-y-6">
@@ -35,12 +34,24 @@
                 </div>
 
                 <div>
-                    <label for="icon" class="block text-sm font-bold text-gray-700 mb-2">أيقونة الخدمة (اختياري)</label>
-                    <input type="text" name="icon" id="icon" value="{{ old('icon', $service->icon) }}"
-                           class="w-full px-4 py-3 rounded-xl border @error('icon') border-red-500 bg-red-50 @else border-gray-200 bg-gray-50 focus:bg-white @enderror focus:ring-2 focus:ring-green-500 outline-none transition">
+                    <label class="block text-sm font-bold text-gray-700 mb-2">أيقونة الخدمة (صورة)</label>
+
+                    <input type="file" name="icon" accept="image/*"
+                           class="w-full text-gray-500 font-medium text-sm bg-gray-50 file:cursor-pointer cursor-pointer file:border-0 file:py-3 file:px-4 file:mr-4 file:bg-green-100 file:hover:bg-green-200 file:text-green-700 rounded-xl border @error('icon') border-red-500 @else border-gray-200 @enderror focus:outline-none focus:ring-2 focus:ring-green-500 transition-all">
+
                     @error('icon')
-                        <p class="text-red-500 text-sm mt-1 font-semibold">{{ $message }}</p>
+                        <p class="text-red-500 text-xs mt-1 font-bold">{{ $message }}</p>
                     @enderror
+                    <p class="text-xs text-gray-400 mt-2 font-semibold">💡 اترك هذا الحقل فارغاً إذا كنت لا تود تغيير الأيقونة الحالية.</p>
+
+                    @if($service->icon)
+                        <div class="mt-4 p-4 border border-gray-100 rounded-xl bg-gray-50 inline-block">
+                            <p class="text-xs font-bold text-gray-500 mb-2">الأيقونة الحالية:</p>
+                            <div class="w-20 h-20 rounded-full bg-white border border-gray-200 flex items-center justify-center p-2 overflow-hidden shadow-sm">
+                                <img src="{{ asset($service->icon) }}" alt="Current Icon" class="max-w-full max-h-full object-contain">
+                            </div>
+                        </div>
+                    @endif
                 </div>
 
                 <div>
@@ -55,7 +66,7 @@
 
                 <div>
                     <label class="block text-sm font-bold text-gray-700 mb-2">رابط "تعرف المزيد" (اختياري)</label>
-                    <input type="url" name="link" value="{{ old('link', $service->link ?? '') }}" dir="ltr"
+                    <input type="url" name="link" value="{{ old('link', $service->link) }}" dir="ltr"
                             class="w-full px-4 py-3 rounded-xl border @error('link') border-red-500 @else border-gray-200 @enderror focus:ring-2 focus:ring-green-500 outline-none transition text-left"
                             placeholder="https://example.com/details">
                     @error('link')

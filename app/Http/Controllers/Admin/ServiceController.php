@@ -3,24 +3,24 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Http\Requests\Admin\ServiceRequest;
-use App\Services\ServiceManager;
 use App\Models\Service;
+use App\Services\ServiceManager;
+use App\Services\SettingManager;
 
 class ServiceController extends Controller
 {
-    public function __construct(protected ServiceManager $serviceManager)
-    {}
+    public function __construct(protected ServiceManager $serviceManager, protected SettingManager $settingManager) {}
 
     /**
      * Display a listing of the resource.
      */
-
     public function index()
     {
         $services = $this->serviceManager->getAllServicesForAdmin();
-        return view('admin.services.index', compact('services'));
+        $settings = $this->settingManager->getAllSettings();
+
+        return view('admin.services.index', compact('services', 'settings'));
     }
 
     /**
@@ -28,7 +28,9 @@ class ServiceController extends Controller
      */
     public function create()
     {
-        return view('admin.services.create');
+        $settings = $this->settingManager->getAllSettings();
+
+        return view('admin.services.create', compact('settings'));
     }
 
     /**
@@ -37,6 +39,7 @@ class ServiceController extends Controller
     public function store(ServiceRequest $request)
     {
         $this->serviceManager->createService($request->validated());
+
         return redirect()->route('admin.services.index')->with('success', 'تم إضافة الخدمة بنجاح.');
     }
 
@@ -45,7 +48,9 @@ class ServiceController extends Controller
      */
     public function edit(Service $service)
     {
-        return view('admin.services.edit', compact('service'));
+        $settings = $this->settingManager->getAllSettings();
+
+        return view('admin.services.edit', compact('service', 'settings'));
     }
 
     /**
@@ -53,7 +58,9 @@ class ServiceController extends Controller
      */
     public function update(ServiceRequest $request, Service $service)
     {
-        $this->serviceManager->updateService($service , $request->validated());
+        $settings = $this->settingManager->getAllSettings();
+        $this->serviceManager->updateService($service, $request->validated());
+
         return redirect()->route('admin.services.index')->with('success', 'تم تحديث الخدمة بنجاح.');
     }
 
@@ -63,6 +70,8 @@ class ServiceController extends Controller
     public function destroy(Service $service)
     {
         $this->serviceManager->deleteService($service);
+        $settings = $this->settingManager->getAllSettings();
+
         return redirect()->route('admin.services.index')->with('success', 'تم حذف الخدمة بنجاح.');
     }
 }

@@ -15,7 +15,7 @@
         </a>
     </div>
 
-    <form action="{{ route('admin.products.update', $product->id) }}" method="POST" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 space-y-6">
+    <form action="{{ route('admin.products.update', $product->id) }}" method="POST" enctype="multipart/form-data" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 space-y-6">
         @csrf
         @method('PUT')
 
@@ -28,10 +28,20 @@
             </div>
 
             <div>
-                <label class="block text-sm font-bold text-gray-700 mb-2">رابط الصورة (URL)</label>
-                <input type="text" name="image" value="{{ old('image', $product->image) }}" dir="ltr"
-                       class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-green-500 outline-none transition text-left">
+                <label class="block text-sm font-bold text-gray-700 mb-2">صورة المنتج / العمل</label>
+                <input type="file" name="image" accept="image/*"
+                       class="w-full text-gray-500 font-medium text-sm bg-gray-50 file:cursor-pointer cursor-pointer file:border-0 file:py-3 file:px-4 file:mr-4 file:bg-green-100 file:hover:bg-green-200 file:text-green-700 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-green-500 transition-all">
                 @error('image') <p class="text-red-500 text-xs mt-1 font-bold">{{ $message }}</p> @enderror
+                <p class="text-xs text-gray-400 mt-2 font-semibold">💡 اترك هذا الحقل فارغاً إذا كنت لا تود تغيير الصورة الحالية.</p>
+
+                @if($product->image)
+                    <div class="mt-4 p-4 border border-gray-100 rounded-xl bg-gray-50 inline-block">
+                        <p class="text-xs font-bold text-gray-500 mb-2">الصورة الحالية:</p>
+                        <div class="w-32 h-32 rounded-xl bg-white border border-gray-200 flex items-center justify-center p-2 overflow-hidden shadow-sm">
+                            <img src="{{ asset($product->image) }}" alt="Current Image" class="max-w-full max-h-full object-contain">
+                        </div>
+                    </div>
+                @endif
             </div>
 
             <div>

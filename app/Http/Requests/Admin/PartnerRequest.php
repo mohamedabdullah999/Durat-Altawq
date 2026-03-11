@@ -6,34 +6,20 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class PartnerRequest extends FormRequest
 {
-    public function prepareForValidation()
-    {
-        if ($this->filled('logo')) {
-            $value = trim($this->input('logo'));
-            if (!str_starts_with($value, 'http://') && !str_starts_with($value, 'https://') && str_contains($value, '.')) {
-                $this->merge(['logo' => 'https://' . $value]);
-            }
-        }
-    }
-
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
+        $logoRule = $this->isMethod('POST')
+                    ? 'required|image|mimes:jpeg,png,jpg,svg,webp|max:2048'
+                    : 'nullable|image|mimes:jpeg,png,jpg,svg,webp|max:2048';
+
         return [
             'name' => 'required|string|max:255',
-            'logo' => 'required|url|max:2048',
+            'logo' => $logoRule,
         ];
     }
 
@@ -41,8 +27,10 @@ class PartnerRequest extends FormRequest
     {
         return [
             'name.required' => 'اسم الشريك مطلوب.',
-            'logo.required' => 'رابط اللوجو مطلوب.',
-            'logo.url'      => 'رابط اللوجو غير صالح.',
+            'logo.required' => 'يرجى رفع لوجو الشريك.',
+            'logo.image' => 'الملف المرفوع يجب أن يكون صورة.',
+            'logo.mimes' => 'صيغة الصورة غير مدعومة. الصيغ المدعومة: jpeg, png, jpg, svg, webp.',
+            'logo.max' => 'حجم الصورة يجب ألا يتجاوز 2 ميجابايت.',
         ];
     }
 }

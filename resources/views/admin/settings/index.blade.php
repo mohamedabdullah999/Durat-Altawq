@@ -15,7 +15,7 @@
         </div>
     @endif
 
-    <form action="{{ route('admin.settings.update') }}" method="POST" class="space-y-8">
+    <form action="{{ route('admin.settings.update') }}" method="POST" enctype="multipart/form-data" class="space-y-8">
         @csrf
         @method('PUT')
 
@@ -25,12 +25,21 @@
             </h4>
             <div class="grid grid-cols-1 gap-6">
                 <div>
-                    <label class="block text-sm font-bold text-gray-700 mb-2">رابط لوجو الموقع (Logo URL)</label>
-                    <input type="url" name="site_logo" value="{{ old('site_logo', $settings['site_logo'] ?? '') }}" dir="ltr"
-                           class="w-full px-4 py-3 rounded-xl border @error('site_logo') border-red-500 bg-red-50 @else border-gray-200 bg-gray-50 focus:bg-white @enderror focus:ring-2 focus:ring-green-500 outline-none transition text-left"
-                           placeholder="https://example.com/logo.png">
-                    <p class="text-xs text-gray-400 mt-2">يفضل أن تكون الصورة بصيغة PNG وبخلفية شفافة.</p>
+                    <label class="block text-sm font-bold text-gray-700 mb-2">لوجو الموقع (صورة)</label>
+                    <input type="file" name="site_logo" accept="image/*"
+                           class="w-full text-gray-500 font-medium text-sm bg-gray-50 file:cursor-pointer cursor-pointer file:border-0 file:py-3 file:px-4 file:mr-4 file:bg-green-100 file:hover:bg-green-200 file:text-green-700 rounded-xl border @error('site_logo') border-red-500 @else border-gray-200 @enderror focus:outline-none focus:ring-2 focus:ring-green-500 transition-all">
+
                     @error('site_logo') <p class="text-red-500 text-xs mt-1 font-bold">{{ $message }}</p> @enderror
+                    <p class="text-xs text-gray-400 mt-2">💡 يفضل أن تكون الصورة بصيغة PNG وبخلفية شفافة. اترك الحقل فارغاً إذا لم ترد تغيير اللوجو الحالي.</p>
+
+                    @if(isset($settings['site_logo']) && $settings['site_logo'])
+                        <div class="mt-4 p-4 border border-gray-100 rounded-xl bg-gray-50 inline-block">
+                            <p class="text-xs font-bold text-gray-500 mb-2">اللوجو الحالي:</p>
+                            <div class="h-16 px-4 rounded-lg bg-gray-200/50 border border-gray-200 flex items-center justify-center overflow-hidden shadow-sm">
+                                <img src="{{ asset($settings['site_logo']) }}" alt="Site Logo" class="max-h-full object-contain">
+                            </div>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>

@@ -6,22 +6,6 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class StoreProductRequest extends FormRequest
 {
-    public function prepareForValidation()
-    {
-        $urlFields = ['image', 'link'];
-        foreach ($urlFields as $link) {
-            if ($this->filled($link)) {
-
-                $value = trim($this->input($link));
-                if (!str_starts_with($value, 'http://') && !str_starts_with($value, 'https://') && str_contains($value, '.')) {
-                    $value = 'https://' . $value;
-                    $this->merge([$link => $value]);
-                }
-
-            }
-        }
-    }
-
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -37,10 +21,14 @@ class StoreProductRequest extends FormRequest
      */
     public function rules(): array
     {
+        $imageRule = $this->isMethod('POST')
+                    ? 'required|image|mimes:jpeg,png,jpg,svg,webp|max:2048'
+                    : 'nullable|image|mimes:jpeg,png,jpg,svg,webp|max:2048';
+
         return [
             'name' => 'required|string|max:255',
-            'description' => 'required|string|max:1000',
-            'image' => 'nullable|url|max:2048',
+            'description' => 'required|string|max:1000', // خليتها nullable عشان ممكن العميل ميكتبش وصف
+            'image' => $imageRule,
             'link' => 'nullable|url|max:255',
         ];
     }
@@ -51,9 +39,13 @@ class StoreProductRequest extends FormRequest
             'name.required' => 'اسم المنتج مطلوب.',
             'name.string' => 'اسم المنتج يجب أن يكون نصاً.',
             'name.max' => 'اسم المنتج لا يمكن أن يتجاوز 255 حرفاً.',
-            'description.string' => 'وصف المنتج يجب أن يكون نصاً.',
             'description.max' => 'وصف المنتج لا يمكن أن يتجاوز 1000 حرفاً.',
+            'image.required' => 'يرجى رفع صورة للمنتج.',
+            'image.image' => 'الملف المرفوع يجب أن يكون صورة.',
+            'image.mimes' => 'صيغة الصورة غير مدعومة. الصيغ المدعومة: jpeg, png, jpg, svg, webp.',
+            'image.max' => 'حجم الصورة يجب ألا يتجاوز 2 ميجابايت.',
             'link.url' => 'الرابط غير صالح.',
+            'description.required' => 'وصف المنتج مطلوب.',
             'link.max' => 'الرابط لا يمكن أن يتجاوز 255 حرفاً.',
         ];
     }

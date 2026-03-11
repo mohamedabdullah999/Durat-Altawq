@@ -3,18 +3,7 @@
 @section('content')
 
     <style>
-        @keyframes slide-left {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
-        }
-        .scrolling-wrapper {
-            display: flex;
-            width: max-content;
-            animation: slide-left 35s linear infinite;
-        }
-        .scrolling-wrapper:hover {
-            animation-play-state: paused;
-        }
+        /* شيلنا الأنيميشن القديم وسبنا بس إخفاء شريط التمرير */
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
@@ -42,15 +31,29 @@
             </div>
             <div class="aspect-video rounded-3xl overflow-hidden shadow-2xl relative border-4 border-green-200 group bg-black">
                 @if(!empty($settings['about_video_url']))
-                    <iframe class="w-full h-full"
-                            src="{{ str_replace('watch?v=', 'embed/', $settings['about_video_url']) }}"
-                            title="فيديو تعريفي"
-                            frameborder="0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            allowfullscreen>
-                    </iframe>
+                    @php
+                    $videoUrl = $settings['about_video_url'];
+                    $embedUrl = $videoUrl;
+
+                    if (str_contains($videoUrl, 'youtu.be/')) {
+                        $videoId = explode('?', explode('youtu.be/', $videoUrl)[1])[0];
+                        $embedUrl = 'https://www.youtube.com/embed/' . $videoId;
+                    }
+                    elseif (str_contains($videoUrl, 'watch?v=')) {
+                        $videoId = explode('&', explode('watch?v=', $videoUrl)[1])[0];
+                        $embedUrl = 'https://www.youtube.com/embed/' . $videoId;
+                    }
+                    @endphp
+
+            <iframe class="w-full h-full"
+                    src="{{ $embedUrl }}"
+                    title="فيديو تعريفي"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen>
+            </iframe>
                 @else
-                    <img src="{{ $settings['about_image'] ?? 'https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80' }}" alt="بيئة عمل تقنية" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105">
+                    <img src="{{ asset($settings['about_image'] ?? 'https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80') }}" alt="بيئة عمل تقنية" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105">
                     <div class="absolute inset-0 bg-green-900 bg-opacity-30 flex items-center justify-center transition-opacity duration-500 group-hover:bg-opacity-50 cursor-pointer">
                         <svg class="w-20 h-20 text-white opacity-90 group-hover:scale-110 transition-transform duration-300 drop-shadow-lg" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"></path></svg>
                     </div>
@@ -79,37 +82,37 @@
         </div>
     </section>
 
-    <section id="services" class="py-24 bg-gray-50/60 backdrop-blur-md overflow-hidden" data-animate>
+   <section id="services" class="py-24 bg-gray-50/60 backdrop-blur-md overflow-hidden" data-animate>
         <div class="container mx-auto px-4 mb-16">
             <h2 class="text-4xl font-bold text-center text-green-900">خدماتنا المتميزة</h2>
         </div>
-        <div class="w-full overflow-hidden hide-scrollbar" dir="ltr">
-            <div class="scrolling-wrapper gap-6 px-4" dir="rtl" style="animation-duration: 35s;">
-                @for ($i = 0; $i < 2; $i++)
-                    @forelse($services as $service)
-                        <div class="w-[85vw] sm:w-80 flex-shrink-0 bg-white p-8 rounded-3xl shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 group flex flex-col items-center text-center relative">
-                            <div class="w-20 h-20 bg-green-50 rounded-full mb-6 overflow-hidden p-4 border border-green-100 group-hover:bg-green-600 transition-colors duration-300 flex items-center justify-center shadow-inner">
-                                @if($service->icon)
-                                    <img src="{{ $service->icon }}" alt="{{ $service->title }}" class="w-full h-full object-contain filter group-hover:brightness-0 group-hover:invert transition duration-300">
-                                @else
-                                    <span class="text-3xl">💻</span>
-                                @endif
-                            </div>
-                            <h3 class="text-2xl font-bold mb-4 text-gray-800">{{ $service->title }}</h3>
-                            <p class="text-gray-500 text-base leading-relaxed mb-6 flex-1">{{ Str::limit($service->description, 100) }}</p>
+        <div class="w-full overflow-hidden" dir="ltr">
+            <div class="flex gap-8 px-4 py-4 carousel-container overflow-x-auto hide-scrollbar snap-x snap-mandatory" dir="rtl">
+                @forelse($services as $service)
+                    <div class="w-[85vw] sm:w-[22rem] shrink-0 snap-start bg-white border border-gray-100 rounded-3xl shadow-sm hover:shadow-xl hover:border-green-300 transition duration-300 flex flex-col items-center group pt-8">
 
-                            @if($service->link)
-                                <a href="{{ $service->link }}" target="_blank" class="mt-auto flex items-center gap-2 text-green-600 font-bold hover:text-green-800 transition duration-300">
-                                    تعرف المزيد <span class="text-xl">&larr;</span>
-                                </a>
+                        <div class="h-40 w-40 bg-gray-50 rounded-full flex items-center justify-center p-2 border-4 border-green-50 group-hover:border-green-200 transition duration-300 shadow-md overflow-hidden relative z-10">
+                            @if($service->icon)
+                                <img src="{{ asset($service->icon) }}" alt="{{ $service->title }}" class="w-full h-full object-cover rounded-full hover:scale-110 transition duration-500">
                             @else
-                                <div class="mt-auto h-6"></div>
+                                <span class="text-5xl opacity-70">💻</span>
                             @endif
                         </div>
-                    @empty
-                        @if($i == 0) <p class="text-center w-full text-gray-500">لا توجد خدمات متوفرة حالياً ....</p> @endif
-                    @endforelse
-                @endfor
+
+                        <div class="p-8 flex flex-col flex-1 text-center w-full">
+                            <h3 class="text-2xl font-bold mb-3 text-green-900">{{ $service->title }}</h3>
+                            <p class="text-gray-500 text-base leading-relaxed mb-8 flex-1">{{ Str::limit($service->description, 90) }}</p>
+
+                            @if($service->link)
+                                <a href="{{ $service->link }}" target="_blank" class="mt-auto block w-full bg-green-50 border border-green-100 text-green-700 font-bold py-3 px-6 rounded-xl hover:bg-green-600 hover:text-white transition duration-300">
+                                    تعرف المزيد
+                                </a>
+                            @endif
+                        </div>
+                    </div>
+                @empty
+                    <p class="text-center w-full text-gray-500">لا توجد خدمات متوفرة حالياً ....</p>
+                @endforelse
             </div>
         </div>
     </section>
@@ -118,55 +121,62 @@
         <div class="container mx-auto px-4 mb-16">
             <h2 class="text-4xl font-bold text-center text-green-900">منتجاتنا الرائدة</h2>
         </div>
-        <div class="w-full overflow-hidden hide-scrollbar" dir="ltr">
-            <div class="scrolling-wrapper gap-8 px-4" dir="rtl" style="animation-duration: 40s;">
-                @for ($i = 0; $i < 2; $i++)
-                    @forelse($products as $product)
-                        <div class="w-[85vw] sm:w-[22rem] flex-shrink-0 bg-white border border-gray-100 rounded-3xl shadow-sm hover:shadow-xl hover:border-green-300 transition duration-300 overflow-hidden flex flex-col group">
-                            <div class="h-56 w-full bg-gray-50 flex items-center justify-center p-6 border-b border-gray-100 group-hover:bg-green-50/50 transition duration-300">
-                                @if($product->image)
-                                    <img src="{{ $product->image }}" alt="{{ $product->name }}" class="w-full h-full object-contain hover:scale-105 transition duration-500 drop-shadow-sm">
-                                @else
-                                    <span class="text-6xl opacity-70">📦</span>
-                                @endif
-                            </div>
-                            <div class="p-8 flex flex-col flex-1 text-center">
-                                <h3 class="text-2xl font-bold mb-3 text-green-900">{{ $product->name }}</h3>
-                                <p class="text-gray-500 text-base leading-relaxed mb-8 flex-1">{{ Str::limit($product->description, 90) }}</p>
+        <div class="w-full overflow-hidden" dir="ltr">
+            <div class="flex gap-8 px-4 py-4 carousel-container overflow-x-auto hide-scrollbar snap-x snap-mandatory" dir="rtl">
+                @forelse($products as $product)
+                    <div class="w-[85vw] sm:w-[22rem] shrink-0 snap-start bg-white border border-gray-100 rounded-3xl shadow-sm hover:shadow-xl hover:border-green-300 transition duration-300 flex flex-col items-center group pt-8">
 
-                                @if($product->link)
-                                    <a href="{{ $product->link }}" target="_blank" class="mt-auto block w-full bg-green-50 border border-green-100 text-green-700 font-bold py-3 px-6 rounded-xl hover:bg-green-600 hover:text-white transition duration-300">
-                                        تعرف المزيد
-                                    </a>
-                                @endif
-                            </div>
+                        <div class="h-40 w-40 bg-gray-50 rounded-full flex items-center justify-center p-2 border-4 border-green-50 group-hover:border-green-200 transition duration-300 shadow-md overflow-hidden relative z-10">
+                            @if($product->image)
+                                <img src="{{ asset($product->image) }}" alt="{{ $product->name }}" class="w-full h-full object-cover rounded-full hover:scale-110 transition duration-500">
+                            @else
+                                <span class="text-5xl opacity-70">📦</span>
+                            @endif
                         </div>
-                    @empty
-                        @if($i == 0) <p class="text-center w-full text-gray-500">جاري إضافة المنتجات...</p> @endif
-                    @endforelse
-                @endfor
+
+                        <div class="p-8 flex flex-col flex-1 text-center w-full">
+                            <h3 class="text-2xl font-bold mb-3 text-green-900">{{ $product->name }}</h3>
+                            <p class="text-gray-500 text-base leading-relaxed mb-8 flex-1">{{ Str::limit($product->description, 90) }}</p>
+
+                            @if($product->link)
+                                <a href="{{ $product->link }}" target="_blank" class="mt-auto block w-full bg-green-50 border border-green-100 text-green-700 font-bold py-3 px-6 rounded-xl hover:bg-green-600 hover:text-white transition duration-300">
+                                    تعرف المزيد
+                                </a>
+                            @endif
+                        </div>
+                    </div>
+                @empty
+                    <p class="text-center w-full text-gray-500">جاري إضافة المنتجات...</p>
+                @endforelse
             </div>
         </div>
     </section>
 
-    <section id="partners" class="py-16 bg-green-50/50 backdrop-blur-md shadow-inner overflow-hidden" data-animate>
+   <section id="partners" class="py-16 bg-green-50/50 backdrop-blur-md shadow-inner overflow-hidden" data-animate>
         <div class="container mx-auto px-4 text-center mb-10">
             <h2 class="text-3xl font-bold text-green-900 relative inline-block">شركائنا في النجاح<span class="absolute bottom-0 right-0 h-1 w-20 bg-green-600 rounded-full transform translate-y-2"></span></h2>
         </div>
-        <div class="w-full overflow-hidden hide-scrollbar" dir="ltr">
-            <div class="scrolling-wrapper gap-12 px-4 items-center" dir="rtl" style="animation-duration: 25s;">
-                @for ($i = 0; $i < 3; $i++)
-                    @forelse($partners as $partner)
-                        <div class="w-48 flex-shrink-0 flex flex-col items-center justify-center bg-transparent group cursor-default pt-4">
-                            <div class="w-28 h-28 bg-white rounded-full p-4 shadow-sm group-hover:shadow-lg transition-all duration-300 border border-gray-100 flex items-center justify-center mb-4 relative z-10 group-hover:-translate-y-2">
-                                <img src="{{ $partner->logo }}" alt="{{ $partner->name }}" class="max-w-full max-h-full object-contain filter grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition duration-300">
-                            </div>
-                            <h4 class="text-gray-600 font-bold text-lg group-hover:text-green-700 transition duration-300">{{ $partner->name }}</h4>
+        <div class="w-full overflow-hidden" dir="ltr">
+            <div class="flex items-center gap-8 px-4 py-4 carousel-container overflow-x-auto hide-scrollbar snap-x snap-mandatory" dir="rtl">
+                @forelse($partners as $partner)
+                    <div class="w-[85vw] sm:w-72 shrink-0 snap-start bg-white border border-gray-100 rounded-3xl shadow-sm hover:shadow-xl hover:border-green-300 transition duration-300 flex flex-col items-center group pt-8 pb-8">
+
+                        <div class="h-40 w-40 bg-white rounded-full flex items-center justify-center p-4 border-4 border-green-50 group-hover:border-green-200 transition duration-300 shadow-md overflow-hidden relative z-10">
+                            @if($partner->logo)
+                                <img src="{{ asset($partner->logo) }}" alt="{{ $partner->name }}" class="w-full h-full object-cover rounded-full hover:scale-110 transition duration-500">
+                            @else
+                                <div class="w-full h-full bg-white rounded-full flex items-center justify-center shadow-inner">
+                                    </div>
+                            @endif
                         </div>
-                    @empty
-                        @if($i == 0) <p class="text-gray-500">جاري تحديث قائمة الشركاء...</p> @endif
-                    @endforelse
-                @endfor
+
+                        <div class="pt-6 flex flex-col items-center text-center w-full px-4">
+                            <h4 class="text-xl font-bold text-green-900 group-hover:text-green-700 transition duration-300">{{ $partner->name }}</h4>
+                        </div>
+                    </div>
+                @empty
+                    <p class="text-center w-full text-gray-500">جاري تحديث قائمة الشركاء...</p>
+                @endforelse
             </div>
         </div>
     </section>
@@ -245,4 +255,30 @@
             </div>
         </div>
     </section>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const carousels = document.querySelectorAll('.carousel-container');
+
+            carousels.forEach(carousel => {
+                setInterval(() => {
+                    // إيقاف التمرير لو الماوس على العنصر عشان العميل يقدر يقرأ التفاصيل براحته
+                    if (carousel.matches(':hover')) return;
+
+                    // حساب أقصى مسافة للتمرير
+                    const maxScroll = carousel.scrollWidth - carousel.clientWidth;
+                    const currentScroll = Math.abs(carousel.scrollLeft);
+
+                    // لو وصلنا للآخر (بنسيب 10 بيكسل كنسبة خطأ في تقريب المتصفحات)
+                    if (currentScroll >= maxScroll - 10) {
+                        // ارجع للأول خالص بنعومة
+                        carousel.scrollTo({ left: 0, behavior: 'smooth' });
+                    } else {
+                        // حرك بمقدار عرض الشاشة الظاهر عشان يجيب المجموعة اللي بعدها
+                        carousel.scrollBy({ left: -carousel.clientWidth, behavior: 'smooth' });
+                    }
+                }, 4000); // 4000 = 4 ثواني وقوف
+            });
+        });
+    </script>
 @endsection

@@ -23,14 +23,19 @@
 
 <body class="bg-gray-100 text-gray-800 antialiased selection:bg-green-600 selection:text-white" x-data="{ sidebarOpen: false }">
 
+    @inject('settingManager', 'App\Services\SettingManager')
+    @php
+        $settings = $settingManager->getAllSettings();
+    @endphp
+
     <div class="flex h-screen overflow-hidden">
 
         <aside :class="sidebarOpen ? 'translate-x-0' : 'translate-x-full'" class="sidebar-transition fixed inset-y-0 right-0 z-50 w-64 bg-green-900 text-white shadow-2xl md:relative md:translate-x-0 flex flex-col">
 
             <div class="flex items-center justify-center h-20 border-b border-green-800 px-4">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-full bg-white p-1">
-                        <img src="{{ $settings['site_logo'] ?? '' }}" alt="" class="w-full h-full object-contain rounded-full">
+                    <div class="w-10 h-10 rounded-full bg-white overflow-hidden shrink-0 shadow-sm border border-green-700">
+                        <img src="{{ asset($settings['site_logo'] ?? 'https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80') }}" alt="Logo" class="w-full h-full object-cover">
                     </div>
                     <span class="text-xl font-bold tracking-wide">إدارة درة الطوق</span>
                 </div>
@@ -48,11 +53,11 @@
                     <span class="text-lg">الخدمات</span>
                 </a>
 
- <a href="{{ route('admin.products.index') }}"
-   class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-semibold {{ request()->routeIs('admin.products.*') ? 'bg-green-800 text-white shadow-md' : 'text-green-100 hover:bg-green-800' }}">
-    <span class="text-2xl">📦</span>
-    <span class="text-lg">المنتجات</span>
-</a>
+                <a href="{{ route('admin.products.index') }}"
+                   class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-semibold {{ request()->routeIs('admin.products.*') ? 'bg-green-800 text-white shadow-md' : 'text-green-100 hover:bg-green-800' }}">
+                    <span class="text-2xl">📦</span>
+                    <span class="text-lg">المنتجات</span>
+                </a>
 
                 <a href="{{ route('admin.contact_messages.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all {{ request()->routeIs('admin.contact_messages.*') ? 'bg-green-700 text-white shadow-inner font-bold' : 'text-green-100 hover:bg-green-800 font-semibold' }}">
                     <span class="text-2xl">✉️</span>
@@ -60,10 +65,11 @@
                 </a>
 
                 <a href="{{ route('admin.partners.index') }}"
-   class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-semibold {{ request()->routeIs('admin.partners.*') ? 'bg-green-800 text-white shadow-md' : 'text-green-100 hover:bg-green-800' }}">
-    <span class="text-2xl">🤝</span>
-    <span class="text-lg">شركاء النجاح</span>
-</a>
+                   class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-semibold {{ request()->routeIs('admin.partners.*') ? 'bg-green-800 text-white shadow-md' : 'text-green-100 hover:bg-green-800' }}">
+                    <span class="text-2xl">🤝</span>
+                    <span class="text-lg">شركاء النجاح</span>
+                </a>
+
                 <a href="{{ route('admin.settings.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all {{ request()->routeIs('admin.settings.*') ? 'bg-green-700 text-white shadow-inner font-bold' : 'text-green-100 hover:bg-green-800 font-semibold' }}">
                     <span class="text-2xl">⚙️</span>
                     <span class="text-lg">إعدادات الموقع</span>
