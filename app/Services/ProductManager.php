@@ -19,7 +19,7 @@ class ProductManager
     public function getFrontendProducts()
     {
         return cache()->rememberForever($this->cachKey, function () {
-            return Product::latest()->get();
+            return Product::latest()->take(12)->get();
         });
     }
 

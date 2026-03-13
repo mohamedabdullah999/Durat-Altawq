@@ -18,7 +18,7 @@ class PartnerManager
     public function getFrontendPartners()
     {
         return Cache::rememberForever($this->cacheKey, function () {
-            return Partner::latest()->get();
+            return Partner::latest()->take(12)->get();
         });
     }
 
