@@ -12,7 +12,7 @@ class ServiceManager
     public function getFrontendServices()
     {
         return Cache::rememberForever('frontend_services', function () {
-            return Service::latest()->get();
+            return Service::latest()->take(12)->get();
         });
     }
 

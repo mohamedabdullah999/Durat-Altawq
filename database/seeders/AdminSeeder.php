@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
 use App\Models\User;
+use Illuminate\Database\Seeder;
+
 class AdminSeeder extends Seeder
 {
     /**
@@ -14,8 +14,8 @@ class AdminSeeder extends Seeder
     {
         User::updateORCreate([
             'name' => 'Admin',
-            'email' => 'info@durat-altawq.com',
-            'password' => "duratAltawq123456&&"
+            'email' => env('ADMIN_EMAIL'),
+            'password' => env('ADMIN_PASSWORD'),
         ]);
     }
 }
